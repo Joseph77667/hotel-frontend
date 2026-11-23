@@ -1,0 +1,19 @@
+@if (user(); as u) {
+  <h1 class="title">{{ greeting() }}, {{ u.fullName }}</h1>
+  <p class="subtitle">
+    Logged in as <strong>{{ u.role }}</strong>. Here is what you can do:
+  </p>
+
+  <div class="shortcut-grid">
+    @for (item of shortcuts(); track item.route) {
+      <a class="shortcut" [routerLink]="item.route">
+        <mat-card appearance="outlined">
+          <mat-card-content>
+            <mat-icon>{{ item.icon }}</mat-icon>
+            <span>{{ item.label }}</span>
+          </mat-card-content>
+        </mat-card>
+      </a>
+    }
+  </div>
+}

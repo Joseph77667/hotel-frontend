@@ -4,12 +4,15 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 import { routes } from './app.routes';
+import { authInterceptor } from './core/auth/auth.interceptor';
+import { errorInterceptor } from './core/http/error.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideAnimationsAsync(),                 // added by "ng add @angular/material"
-    provideHttpClient(withInterceptors([])),  // interceptors are added in the next step
+    provideAnimationsAsync(),
+    // Order matters: authInterceptor adds the token, errorInterceptor handles the response
+    provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
   ],
 };
