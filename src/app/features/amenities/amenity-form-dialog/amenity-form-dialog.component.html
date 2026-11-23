@@ -1,0 +1,29 @@
+<h2 mat-dialog-title>{{ isEdit ? 'Edit amenity' : 'New amenity' }}</h2>
+
+<form [formGroup]="form" (ngSubmit)="save()" novalidate>
+  <mat-dialog-content class="dialog-form">
+    <mat-form-field appearance="outline">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" placeholder="e.g. Wi-Fi" maxlength="50" cdkFocusInitial />
+      @if (error('name', 'Name'); as message) {
+        <mat-error>{{ message }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="description" rows="3" maxlength="255"></textarea>
+      <mat-hint align="end">{{ form.controls.description.value.length }} / 255</mat-hint>
+      @if (error('description', 'Description'); as message) {
+        <mat-error>{{ message }}</mat-error>
+      }
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" mat-dialog-close>Cancel</button>
+    <button mat-flat-button type="submit" [disabled]="saving()">
+      {{ saving() ? 'Saving…' : 'Save' }}
+    </button>
+  </mat-dialog-actions>
+</form>

@@ -1,0 +1,9 @@
+.message {
+  margin: 0;
+  white-space: pre-line;
+}
+
+.danger {
+  --mdc-filled-button-container-color: #b3261e;
+  --mdc-filled-button-label-text-color: #fff;
+}

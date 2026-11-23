@@ -41,14 +41,14 @@ export const routes: Routes = [
         title: 'Room Types | HotelJ',
         data: { roles: ADMIN_ONLY },
         loadComponent: () =>
-          import('./features/room-types/room-type-list.component').then((m) => m.RoomTypeListComponent),
+          import('./features/room-types/room-type-list/room-type-list.component').then((m) => m.RoomTypeListComponent),
       },
       {
         path: 'settings/amenities',
         title: 'Amenities | HotelJ',
         data: { roles: ADMIN_ONLY },
         loadComponent: () =>
-          import('./features/amenities/amenity-list.component').then((m) => m.AmenityListComponent),
+          import('./features/amenities/amenity-list/amenity-list.component').then((m) => m.AmenityListComponent),
       },
       { path: 'staff', title: 'Staff | HotelJ', data: { roles: ADMIN_ONLY, title: 'Staff' }, loadComponent: comingSoon },
     ],

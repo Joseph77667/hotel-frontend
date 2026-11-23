@@ -1,0 +1,32 @@
+.name {
+  font-weight: 600;
+}
+
+.description {
+  font-size: 13px;
+  color: #777;
+  max-width: 320px;
+}
+
+.price {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.guests {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.guests mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: #6b7c93;
+}
+
+td.mat-mdc-cell {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}

@@ -11,30 +11,8 @@ import { ActivatedRoute } from '@angular/router';
   selector: 'app-coming-soon',
   standalone: true,
   imports: [MatIconModule],
-  template: `
-    <div class="coming-soon">
-      <mat-icon>construction</mat-icon>
-      <h2>{{ title }}</h2>
-      <p>This page is coming soon.</p>
-    </div>
-  `,
-  styles: `
-    .coming-soon {
-      text-align: center;
-      padding: 64px 16px;
-      color: #666;
-    }
-    mat-icon {
-      font-size: 56px;
-      width: 56px;
-      height: 56px;
-      color: #9aa9bb;
-    }
-    h2 {
-      margin: 12px 0 4px;
-      color: #1e3a5f;
-    }
-  `,
+  templateUrl: './coming-soon.component.html',
+  styleUrl: './coming-soon.component.css',
 })
 export class ComingSoonComponent {
   readonly title: string = inject(ActivatedRoute).snapshot.data['title'] ?? 'Page';
