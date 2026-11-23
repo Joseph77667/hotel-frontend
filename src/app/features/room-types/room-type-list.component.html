@@ -1,0 +1,80 @@
+<app-page-header title="Room Types" subtitle="Room categories with their nightly price, capacity and amenities">
+  <button mat-flat-button (click)="openForm()">
+    <mat-icon>add</mat-icon>
+    Add room type
+  </button>
+</app-page-header>
+
+<div class="list-toolbar">
+  <mat-form-field appearance="outline" class="search-field" subscriptSizing="dynamic">
+    <mat-icon matPrefix>search</mat-icon>
+    <input matInput placeholder="Search by name or amenity" #query (input)="search.set(query.value)" />
+  </mat-form-field>
+  <span class="muted">{{ filtered().length }} of {{ roomTypes().length }}</span>
+</div>
+
+<div class="table-card">
+  @if (loading()) {
+    <mat-progress-bar mode="indeterminate" />
+  }
+
+  <table mat-table [dataSource]="filtered()">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let roomType">
+        <div class="name">{{ roomType.name }}</div>
+        @if (roomType.description) {
+          <div class="description">{{ roomType.description }}</div>
+        }
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="basePrice">
+      <th mat-header-cell *matHeaderCellDef>Price / night</th>
+      <td mat-cell *matCellDef="let roomType" class="price">{{ roomType.basePrice | yen }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="maxOccupancy">
+      <th mat-header-cell *matHeaderCellDef>Max guests</th>
+      <td mat-cell *matCellDef="let roomType">
+        <span class="guests"><mat-icon>person</mat-icon>{{ roomType.maxOccupancy }}</span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="amenities">
+      <th mat-header-cell *matHeaderCellDef>Amenities</th>
+      <td mat-cell *matCellDef="let roomType">
+        <mat-chip-set>
+          @for (amenity of roomType.amenities; track amenity.id) {
+            <mat-chip>{{ amenity.name }}</mat-chip>
+          } @empty {
+            <span class="muted">None</span>
+          }
+        </mat-chip-set>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let roomType" class="actions-cell">
+        <button mat-icon-button matTooltip="Edit" (click)="openForm(roomType)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button matTooltip="Delete" class="danger-text" (click)="delete(roomType)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columns"></tr>
+    <tr mat-row *matRowDef="let row; columns: columns"></tr>
+
+    <tr class="mat-mdc-row" *matNoDataRow>
+      <td class="empty-state" [attr.colspan]="columns.length">
+        @if (!loading()) {
+          {{ search() ? 'No room types match your search.' : 'No room types yet. Click "Add room type" to create one.' }}
+        }
+      </td>
+    </tr>
+  </table>
+</div>

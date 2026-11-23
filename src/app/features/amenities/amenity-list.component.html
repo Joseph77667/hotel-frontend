@@ -1,0 +1,57 @@
+<app-page-header title="Amenities" subtitle="Features that room types can offer, such as Wi-Fi or a mini bar">
+  <button mat-flat-button (click)="openForm()">
+    <mat-icon>add</mat-icon>
+    Add amenity
+  </button>
+</app-page-header>
+
+<div class="list-toolbar">
+  <mat-form-field appearance="outline" class="search-field" subscriptSizing="dynamic">
+    <mat-icon matPrefix>search</mat-icon>
+    <input matInput placeholder="Search amenities" #query (input)="search.set(query.value)" />
+  </mat-form-field>
+  <span class="muted">{{ filtered().length }} of {{ amenities().length }}</span>
+</div>
+
+<div class="table-card">
+  @if (loading()) {
+    <mat-progress-bar mode="indeterminate" />
+  }
+
+  <table mat-table [dataSource]="filtered()">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let amenity"><strong>{{ amenity.name }}</strong></td>
+    </ng-container>
+
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef>Description</th>
+      <td mat-cell *matCellDef="let amenity">
+        {{ amenity.description || '—' }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let amenity" class="actions-cell">
+        <button mat-icon-button matTooltip="Edit" (click)="openForm(amenity)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button matTooltip="Delete" class="danger-text" (click)="delete(amenity)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columns"></tr>
+    <tr mat-row *matRowDef="let row; columns: columns"></tr>
+
+    <tr class="mat-mdc-row" *matNoDataRow>
+      <td class="empty-state" [attr.colspan]="columns.length">
+        @if (!loading()) {
+          {{ search() ? 'No amenities match your search.' : 'No amenities yet. Click "Add amenity" to create one.' }}
+        }
+      </td>
+    </tr>
+  </table>
+</div>

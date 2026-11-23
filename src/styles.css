@@ -24,3 +24,91 @@ body {
   --mdc-snackbar-supporting-text-color: #fff;
   --mat-snack-bar-button-color: #fff;
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+/* Search box row above tables */
+.list-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.search-field {
+  width: 320px;
+  max-width: 100%;
+}
+
+/* White card around a table */
+.table-card {
+  position: relative;
+  background: #fff;
+  border: 1px solid #e3e7ec;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+.table-card table {
+  width: 100%;
+}
+
+.table-card th.mat-mdc-header-cell {
+  font-weight: 600;
+  color: #1e3a5f;
+  background: #f8fafc;
+}
+
+.actions-cell {
+  text-align: right;
+  white-space: nowrap;
+  width: 1%;
+}
+
+.muted {
+  color: #888;
+}
+
+.empty-state {
+  padding: 40px 16px;
+  text-align: center;
+  color: #888;
+}
+
+/* Forms inside dialogs */
+.dialog-form {
+  display: flex;
+  flex-direction: column;
+  min-width: 360px;
+  padding-top: 8px !important;
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+}
+
+.form-row > * {
+  flex: 1;
+}
+
+.full-width {
+  width: 100%;
+}
+
+/* Red button (delete etc.) */
+.danger-text {
+  color: #b3261e;
+}
+
+@media (max-width: 599px) {
+  .dialog-form {
+    min-width: 0;
+  }
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+}

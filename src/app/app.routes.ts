@@ -36,8 +36,20 @@ export const routes: Routes = [
       { path: 'guests', title: 'Guests | HotelJ', data: { roles: FRONT_DESK, title: 'Guests' }, loadComponent: comingSoon },
       { path: 'rooms', title: 'Room Board | HotelJ', data: { roles: ALL_STAFF, title: 'Room Board' }, loadComponent: comingSoon },
       { path: 'invoices', title: 'Invoices | HotelJ', data: { roles: FRONT_DESK, title: 'Invoices' }, loadComponent: comingSoon },
-      { path: 'settings/room-types', title: 'Room Types | HotelJ', data: { roles: ADMIN_ONLY, title: 'Room Types' }, loadComponent: comingSoon },
-      { path: 'settings/amenities', title: 'Amenities | HotelJ', data: { roles: ADMIN_ONLY, title: 'Amenities' }, loadComponent: comingSoon },
+      {
+        path: 'settings/room-types',
+        title: 'Room Types | HotelJ',
+        data: { roles: ADMIN_ONLY },
+        loadComponent: () =>
+          import('./features/room-types/room-type-list.component').then((m) => m.RoomTypeListComponent),
+      },
+      {
+        path: 'settings/amenities',
+        title: 'Amenities | HotelJ',
+        data: { roles: ADMIN_ONLY },
+        loadComponent: () =>
+          import('./features/amenities/amenity-list.component').then((m) => m.AmenityListComponent),
+      },
       { path: 'staff', title: 'Staff | HotelJ', data: { roles: ADMIN_ONLY, title: 'Staff' }, loadComponent: comingSoon },
     ],
   },
