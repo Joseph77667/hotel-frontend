@@ -1,0 +1,199 @@
+<a mat-button routerLink="/reservations" class="back-link no-print">
+  <mat-icon>arrow_back</mat-icon>
+  All reservations
+</a>
+
+@if (busy()) {
+  <mat-progress-bar mode="indeterminate" class="no-print" />
+}
+
+@if (reservation(); as r) {
+  <!-- ==================== Header + actions ==================== -->
+  <section class="header no-print">
+    <div>
+      <h1>{{ r.reservationCode }}</h1>
+      <app-status-badge [status]="r.status" />
+    </div>
+
+    <div class="actions">
+      @if (canConfirm()) {
+        <button mat-flat-button (click)="confirmBooking()" [disabled]="busy()">
+          <mat-icon>verified</mat-icon> Confirm
+        </button>
+      }
+      @if (canCheckIn()) {
+        <button mat-flat-button (click)="checkIn()" [disabled]="busy()">
+          <mat-icon>login</mat-icon> Check in
+        </button>
+      }
+      @if (canCheckOut()) {
+        <button mat-flat-button (click)="checkOut()" [disabled]="busy()">
+          <mat-icon>logout</mat-icon> Check out
+        </button>
+      }
+      @if (canPay()) {
+        <button mat-stroked-button (click)="takePayment()" [disabled]="busy()">
+          <mat-icon>payments</mat-icon> Take payment
+        </button>
+      }
+      @if (canCancel()) {
+        <button mat-stroked-button class="danger-text" (click)="cancel()" [disabled]="busy()">
+          <mat-icon>cancel</mat-icon> Cancel
+        </button>
+      }
+    </div>
+  </section>
+
+  <!-- ==================== Progress ==================== -->
+  @if (r.status === 'CANCELLED') {
+    <div class="cancelled-note no-print">
+      <mat-icon>block</mat-icon>
+      This reservation was cancelled.
+    </div>
+  } @else {
+    <ol class="flow no-print">
+      @for (step of flow; track step; let i = $index) {
+        <li [class.done]="i <= flowIndex()" [class.current]="i === flowIndex()">
+          <span class="dot">{{ flowIndex() > i ? '✓' : i + 1 }}</span>
+          {{ toLabel(step) }}
+        </li>
+      }
+    </ol>
+  }
+
+  <div class="grid no-print">
+    <!-- ==================== Stay details ==================== -->
+    <section class="card">
+      <h2>Stay</h2>
+      <dl class="details">
+        <div>
+          <dt>Guest</dt>
+          <dd><a [routerLink]="['/guests', r.guestId]">{{ r.guestName }}</a></dd>
+        </div>
+        <div>
+          <dt>Room</dt>
+          <dd>{{ r.roomNumber }} · {{ r.roomTypeName }}</dd>
+        </div>
+        <div>
+          <dt>Check-in</dt>
+          <dd>{{ r.checkInDate | date: 'yyyy/MM/dd (EEE)' }}</dd>
+        </div>
+        <div>
+          <dt>Check-out</dt>
+          <dd>{{ r.checkOutDate | date: 'yyyy/MM/dd (EEE)' }}</dd>
+        </div>
+        <div>
+          <dt>Nights · guests</dt>
+          <dd>{{ r.nights }} night(s) · {{ r.numberOfGuests }} guest(s)</dd>
+        </div>
+        <div>
+          <dt>Booked by</dt>
+          <dd>{{ r.createdByStaffName || 'Online' }} · {{ r.createdAt | date: 'yyyy/MM/dd HH:mm' }}</dd>
+        </div>
+        @if (r.specialRequests) {
+          <div class="wide">
+            <dt>Special requests</dt>
+            <dd>{{ r.specialRequests }}</dd>
+          </div>
+        }
+      </dl>
+    </section>
+
+    <!-- ==================== Money summary ==================== -->
+    <section class="card money">
+      <h2>Payment</h2>
+      <div class="money-row">
+        <span>Total</span>
+        <strong>{{ r.totalAmount | yen }}</strong>
+      </div>
+      <div class="money-row">
+        <span>Paid</span>
+        <span>{{ r.totalAmount - balance() | yen }}</span>
+      </div>
+      <div class="money-row balance" [class.due]="balance() > 0">
+        <span>Balance due</span>
+        <strong>{{ balance() | yen }}</strong>
+      </div>
+    </section>
+  </div>
+
+  <!-- ==================== Payments ==================== -->
+  <h2 class="section-title no-print">Payments</h2>
+  <div class="table-card no-print">
+    <table mat-table [dataSource]="r.payments">
+      <ng-container matColumnDef="paidAt">
+        <th mat-header-cell *matHeaderCellDef>Date</th>
+        <td mat-cell *matCellDef="let p">{{ p.paidAt | date: 'yyyy/MM/dd HH:mm' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="method">
+        <th mat-header-cell *matHeaderCellDef>Method</th>
+        <td mat-cell *matCellDef="let p">
+          {{ toLabel(p.method) }}
+          @if (p.transactionReference) {
+            <div class="muted small">{{ p.transactionReference }}</div>
+          }
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="amount">
+        <th mat-header-cell *matHeaderCellDef>Amount</th>
+        <td mat-cell *matCellDef="let p">{{ p.amount | yen }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="receivedBy">
+        <th mat-header-cell *matHeaderCellDef>Received by</th>
+        <td mat-cell *matCellDef="let p">{{ p.receivedByStaffName || 'Online' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let p"><app-status-badge [status]="p.status" /></td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let p" class="actions-cell">
+          @if (isAdmin() && p.status === 'COMPLETED') {
+            <button mat-icon-button matTooltip="Refund" class="danger-text" (click)="refund(p)">
+              <mat-icon>undo</mat-icon>
+            </button>
+          }
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="paymentColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: paymentColumns"></tr>
+
+      <tr class="mat-mdc-row" *matNoDataRow>
+        <td class="empty-state" [attr.colspan]="paymentColumns.length">No payments yet.</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ==================== Invoice (after check-out) ==================== -->
+  @if (invoice(); as inv) {
+    <section class="invoice">
+      <div class="invoice-head">
+        <div>
+          <h2>Invoice {{ inv.invoiceNumber }}</h2>
+          <div class="muted">Issued {{ inv.issuedAt | date: 'yyyy/MM/dd HH:mm' }}</div>
+        </div>
+        <button mat-stroked-button class="no-print" (click)="print()">
+          <mat-icon>print</mat-icon> Print
+        </button>
+      </div>
+
+      <dl class="invoice-lines">
+        <div><dt>Guest</dt><dd>{{ inv.guestName }}</dd></div>
+        <div><dt>Reservation</dt><dd>{{ inv.reservationCode }}</dd></div>
+        <div>
+          <dt>Room {{ r.roomNumber }} · {{ r.nights }} night(s)</dt>
+          <dd>{{ inv.subtotal | yen }}</dd>
+        </div>
+        <div><dt>Consumption tax (10%)</dt><dd>{{ inv.taxAmount | yen }}</dd></div>
+        <div class="invoice-total"><dt>Total (tax included)</dt><dd>{{ inv.totalAmount | yen }}</dd></div>
+      </dl>
+    </section>
+  }
+}

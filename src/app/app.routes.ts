@@ -32,9 +32,55 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
       },
-      { path: 'reservations', title: 'Reservations | HotelJ', data: { roles: FRONT_DESK, title: 'Reservations' }, loadComponent: comingSoon },
-      { path: 'guests', title: 'Guests | HotelJ', data: { roles: FRONT_DESK, title: 'Guests' }, loadComponent: comingSoon },
-      { path: 'rooms', title: 'Room Board | HotelJ', data: { roles: ALL_STAFF, title: 'Room Board' }, loadComponent: comingSoon },
+      {
+        path: 'reservations',
+        title: 'Reservations | HotelJ',
+        data: { roles: FRONT_DESK },
+        loadComponent: () =>
+          import('./features/reservations/reservation-list/reservation-list.component').then(
+            (m) => m.ReservationListComponent,
+          ),
+      },
+      {
+        // Must come before 'reservations/:id', otherwise "new" would be read as an id
+        path: 'reservations/new',
+        title: 'New booking | HotelJ',
+        data: { roles: FRONT_DESK },
+        loadComponent: () =>
+          import('./features/reservations/new-reservation/new-reservation.component').then(
+            (m) => m.NewReservationComponent,
+          ),
+      },
+      {
+        path: 'reservations/:id',
+        title: 'Reservation | HotelJ',
+        data: { roles: FRONT_DESK },
+        loadComponent: () =>
+          import('./features/reservations/reservation-detail/reservation-detail.component').then(
+            (m) => m.ReservationDetailComponent,
+          ),
+      },
+      {
+        path: 'guests',
+        title: 'Guests | HotelJ',
+        data: { roles: FRONT_DESK },
+        loadComponent: () =>
+          import('./features/guests/guest-list/guest-list.component').then((m) => m.GuestListComponent),
+      },
+      {
+        path: 'guests/:id',
+        title: 'Guest | HotelJ',
+        data: { roles: FRONT_DESK },
+        loadComponent: () =>
+          import('./features/guests/guest-detail/guest-detail.component').then((m) => m.GuestDetailComponent),
+      },
+      {
+        path: 'rooms',
+        title: 'Room Board | HotelJ',
+        data: { roles: ALL_STAFF },
+        loadComponent: () =>
+          import('./features/rooms/room-board/room-board.component').then((m) => m.RoomBoardComponent),
+      },
       { path: 'invoices', title: 'Invoices | HotelJ', data: { roles: FRONT_DESK, title: 'Invoices' }, loadComponent: comingSoon },
       {
         path: 'settings/room-types',

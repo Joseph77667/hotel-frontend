@@ -1,0 +1,140 @@
+<app-page-header title="New booking" subtitle="Choose dates and a room, pick the guest, then confirm">
+  <a mat-button routerLink="/reservations">
+    <mat-icon>close</mat-icon>
+    Cancel
+  </a>
+</app-page-header>
+
+<mat-stepper linear #stepper class="stepper">
+  <!-- ==================== Step 1: stay and room ==================== -->
+  <mat-step label="Stay & room" [completed]="selectedRoom() !== null">
+    <form [formGroup]="stayForm" (ngSubmit)="searchRooms()" class="stay-form">
+      <mat-form-field appearance="outline">
+        <mat-label>Check-in</mat-label>
+        <input matInput [matDatepicker]="checkInPicker" formControlName="checkIn" [min]="today" />
+        <mat-datepicker-toggle matIconSuffix [for]="checkInPicker" />
+        <mat-datepicker #checkInPicker />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Check-out</mat-label>
+        <input matInput [matDatepicker]="checkOutPicker" formControlName="checkOut" [min]="minCheckOut()" />
+        <mat-datepicker-toggle matIconSuffix [for]="checkOutPicker" />
+        <mat-datepicker #checkOutPicker />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="guests-field">
+        <mat-label>Guests</mat-label>
+        <input matInput type="number" formControlName="guests" min="1" max="20" />
+      </mat-form-field>
+
+      <button mat-flat-button type="submit" class="search-button" [disabled]="searching()">
+        <mat-icon>search</mat-icon>
+        Find rooms
+      </button>
+    </form>
+
+    @if (searching()) {
+      <mat-progress-bar mode="indeterminate" />
+    }
+
+    @if (rooms(); as list) {
+      <p class="result-title">
+        {{ list.length }} room(s) available for {{ stay()?.nights }} night(s)
+      </p>
+
+      <div class="room-options">
+        @for (room of list; track room.id) {
+          <button
+            type="button"
+            class="room-option"
+            [class.selected]="selectedRoom()?.id === room.id"
+            (click)="selectRoom(room)"
+          >
+            <span class="room-number">{{ room.roomNumber }}</span>
+            <span class="room-type">{{ room.roomTypeName }} · floor {{ room.floor }}</span>
+            <span class="room-price">{{ room.pricePerNight | yen }} / night</span>
+            <span class="room-total">{{ room.pricePerNight * (stay()?.nights ?? 0) | yen }} total</span>
+            @if (selectedRoom()?.id === room.id) {
+              <mat-icon class="check">check_circle</mat-icon>
+            }
+          </button>
+        } @empty {
+          <p class="muted">No rooms are free for these dates. Try other dates or fewer guests.</p>
+        }
+      </div>
+    }
+
+    <div class="step-actions">
+      <button mat-flat-button matStepperNext [disabled]="!selectedRoom()">Next: guest</button>
+    </div>
+  </mat-step>
+
+  <!-- ==================== Step 2: guest ==================== -->
+  <mat-step label="Guest" [completed]="selectedGuest() !== null">
+    @if (selectedGuest(); as guest) {
+      <div class="selected-guest">
+        <mat-icon>person</mat-icon>
+        <div>
+          <strong>{{ guest.lastName }} {{ guest.firstName }}</strong>
+          <div class="muted">{{ guest.email }} · {{ guest.phone || 'no phone' }}</div>
+        </div>
+        <span class="spacer"></span>
+        <button mat-button (click)="clearGuest()">Change</button>
+      </div>
+    } @else {
+      <div class="guest-search">
+        <mat-form-field appearance="outline" class="grow" subscriptSizing="dynamic">
+          <mat-icon matPrefix>search</mat-icon>
+          <input matInput placeholder="Search existing guest by name or email" [formControl]="guestSearch" />
+        </mat-form-field>
+        <button mat-stroked-button (click)="createGuest()">
+          <mat-icon>person_add</mat-icon>
+          New guest
+        </button>
+      </div>
+
+      <div class="guest-results">
+        @for (guest of guestResults(); track guest.id) {
+          <button type="button" class="guest-option" (click)="selectGuest(guest)">
+            <strong>{{ guest.lastName }} {{ guest.firstName }}</strong>
+            <span class="muted">{{ guest.email }}</span>
+          </button>
+        }
+      </div>
+    }
+
+    <div class="step-actions">
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-flat-button matStepperNext [disabled]="!selectedGuest()">Next: confirm</button>
+    </div>
+  </mat-step>
+
+  <!-- ==================== Step 3: confirm ==================== -->
+  <mat-step label="Confirm">
+    @if (stay(); as s) {
+      <dl class="summary">
+        <div><dt>Guest</dt><dd>{{ selectedGuest()?.lastName }} {{ selectedGuest()?.firstName }}</dd></div>
+        <div><dt>Room</dt><dd>{{ selectedRoom()?.roomNumber }} · {{ selectedRoom()?.roomTypeName }}</dd></div>
+        <div><dt>Check-in</dt><dd>{{ s.checkIn | date: 'yyyy/MM/dd' }}</dd></div>
+        <div><dt>Check-out</dt><dd>{{ s.checkOut | date: 'yyyy/MM/dd' }}</dd></div>
+        <div><dt>Guests</dt><dd>{{ s.guests }}</dd></div>
+        <div><dt>Nights</dt><dd>{{ s.nights }}</dd></div>
+        <div class="total"><dt>Total (tax included)</dt><dd>{{ total() | yen }}</dd></div>
+      </dl>
+    }
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Special requests (optional)</mat-label>
+      <textarea matInput [formControl]="specialRequests" rows="3" maxlength="500"></textarea>
+    </mat-form-field>
+
+    <div class="step-actions">
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-flat-button (click)="book()" [disabled]="saving()">
+        <mat-icon>event_available</mat-icon>
+        {{ saving() ? 'Booking…' : 'Confirm booking' }}
+      </button>
+    </div>
+  </mat-step>
+</mat-stepper>

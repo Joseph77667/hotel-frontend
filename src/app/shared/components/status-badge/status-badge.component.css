@@ -1,0 +1,28 @@
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  background: #eceff1;
+  color: #455a64;
+}
+
+/* ----- Room ----- */
+.status-available   { background: #e8f5e9; color: #2e7d32; }
+.status-occupied    { background: #e3f2fd; color: #1565c0; }
+.status-cleaning    { background: #fff4e0; color: #b26a00; }
+.status-maintenance { background: #fdecea; color: #b3261e; }
+
+/* ----- Reservation ----- */
+.status-pending     { background: #fff8e1; color: #8d6e00; }
+.status-confirmed   { background: #e8eaf6; color: #303f9f; }
+.status-checked-in  { background: #e3f2fd; color: #1565c0; }
+.status-checked-out { background: #e8f5e9; color: #2e7d32; }
+.status-cancelled   { background: #eceff1; color: #78909c; }
+
+/* ----- Payment ----- */
+.status-completed   { background: #e8f5e9; color: #2e7d32; }
+.status-refunded    { background: #f3e5f5; color: #7b1fa2; }
+.status-failed      { background: #fdecea; color: #b3261e; }

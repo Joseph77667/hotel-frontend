@@ -112,3 +112,21 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     gap: 0;
   }
 }
+
+/* Printing (invoice): hide the sidebar, top bar and buttons */
+@media print {
+  .mat-drawer,
+  .mat-toolbar,
+  .no-print {
+    display: none !important;
+  }
+
+  .mat-drawer-content {
+    margin-left: 0 !important;
+  }
+
+  .content {
+    padding: 0 !important;
+    background: #fff !important;
+  }
+}

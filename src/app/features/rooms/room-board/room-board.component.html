@@ -1,0 +1,113 @@
+<app-page-header title="Room Board" subtitle="Live status of every room, grouped by floor">
+  <button mat-stroked-button (click)="load()" [disabled]="loading()">
+    <mat-icon>refresh</mat-icon>
+    Refresh
+  </button>
+  @if (isAdmin()) {
+    <button mat-flat-button (click)="openForm()">
+      <mat-icon>add</mat-icon>
+      Add room
+    </button>
+  }
+</app-page-header>
+
+<!-- Status filter buttons with counts -->
+<div class="status-filters">
+  <button
+    type="button"
+    class="filter all"
+    [class.selected]="statusFilter() === 'ALL'"
+    (click)="statusFilter.set('ALL')"
+  >
+    <span class="count">{{ rooms().length }}</span>
+    <span>All rooms</span>
+  </button>
+  @for (status of statuses; track status) {
+    <button
+      type="button"
+      class="filter"
+      [class]="'filter status-' + status.toLowerCase()"
+      [class.selected]="statusFilter() === status"
+      (click)="statusFilter.set(status)"
+    >
+      <span class="count">{{ counts()[status] }}</span>
+      <span>{{ statusLabel[status] }}</span>
+    </button>
+  }
+</div>
+
+<div class="list-toolbar">
+  <mat-form-field appearance="outline" class="search-field" subscriptSizing="dynamic">
+    <mat-icon matPrefix>search</mat-icon>
+    <input matInput placeholder="Room number or type" #query (input)="search.set(query.value)" />
+  </mat-form-field>
+  <span class="muted">Showing {{ visibleCount() }} of {{ rooms().length }}</span>
+</div>
+
+@if (loading()) {
+  <mat-progress-bar mode="indeterminate" />
+}
+
+@for (group of floors(); track group.floor) {
+  <section class="floor">
+    <h2 class="floor-title">Floor {{ group.floor }}</h2>
+
+    <div class="room-grid">
+      @for (room of group.rooms; track room.id) {
+        <div class="room-card" [class]="'room-card status-' + room.status.toLowerCase()">
+          <div class="card-top">
+            <span class="room-number">{{ room.roomNumber }}</span>
+            <button mat-icon-button class="menu-button" [matMenuTriggerFor]="roomMenu" aria-label="Room actions">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+          </div>
+
+          <div class="room-type">{{ room.roomTypeName }}</div>
+          <div class="room-price">{{ room.pricePerNight | yen }} / night</div>
+          <app-status-badge [status]="room.status" />
+
+          <mat-menu #roomMenu="matMenu" xPosition="before">
+            @if (room.status === 'OCCUPIED') {
+              <div class="menu-note">
+                <mat-icon>info</mat-icon>
+                Occupied rooms change status at check-out.
+              </div>
+            } @else {
+              @for (target of statusTargets(room); track target) {
+                <button mat-menu-item (click)="changeStatus(room, target)">
+                  <mat-icon>swap_horiz</mat-icon>
+                  <span>Mark as {{ statusLabel[target] }}</span>
+                </button>
+              }
+            }
+
+            @if (isAdmin()) {
+              <mat-divider />
+              <button mat-menu-item (click)="openForm(room)">
+                <mat-icon>edit</mat-icon>
+                <span>Edit room</span>
+              </button>
+              <button mat-menu-item class="danger-text" (click)="delete(room)">
+                <mat-icon class="danger-text">delete</mat-icon>
+                <span>Delete room</span>
+              </button>
+            }
+          </mat-menu>
+        </div>
+      }
+    </div>
+  </section>
+} @empty {
+  @if (!loading()) {
+    <div class="empty-state">
+      @if (rooms().length === 0) {
+        No rooms yet.
+        @if (isAdmin()) {
+          Click "Add room" to create one.
+        }
+      } @else {
+        No rooms match this filter.
+      }
+    </div>
+  }
+}

@@ -1,0 +1,39 @@
+<h2 mat-dialog-title>Take payment</h2>
+
+<form [formGroup]="form" (ngSubmit)="save()" novalidate>
+  <mat-dialog-content class="dialog-form">
+    <p class="balance">
+      {{ data.reservationCode }} · balance due <strong>{{ data.balance | yen }}</strong>
+    </p>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Amount</mat-label>
+      <span matTextPrefix>¥&nbsp;</span>
+      <input matInput type="number" formControlName="amount" min="1" [max]="data.balance" />
+      @if (amountError(); as message) {
+        <mat-error>{{ message }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Method</mat-label>
+      <mat-select formControlName="method">
+        @for (method of methods; track method) {
+          <mat-option [value]="method">{{ toLabel(method) }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Transaction reference (optional)</mat-label>
+      <input matInput formControlName="transactionReference" placeholder="Card slip or transfer number" />
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" mat-dialog-close>Cancel</button>
+    <button mat-flat-button type="submit" [disabled]="saving()">
+      {{ saving() ? 'Saving…' : 'Receive payment' }}
+    </button>
+  </mat-dialog-actions>
+</form>

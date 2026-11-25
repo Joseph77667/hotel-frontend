@@ -1,0 +1,115 @@
+.back-link {
+  margin: -8px 0 12px -8px;
+}
+
+/* ---------- Info card ---------- */
+.info-card {
+  background: #fff;
+  border: 1px solid #e3e7ec;
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+
+.identity {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.identity h1 {
+  margin: 0;
+  font-size: 24px;
+  color: #1e3a5f;
+}
+
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #e3ecf5;
+  color: #1e3a5f;
+  font-size: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin: 20px 0 0;
+}
+
+.details dt {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #6b7c93;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.details dt mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+.details dd {
+  margin: 4px 0 0;
+  font-weight: 500;
+  word-break: break-word;
+}
+
+/* ---------- Stats ---------- */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  padding: 14px 18px;
+  background: #fff;
+  border: 1px solid #e3e7ec;
+  border-radius: 10px;
+}
+
+.stat .value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1e3a5f;
+}
+
+.stat .label {
+  font-size: 13px;
+  color: #6b7c93;
+}
+
+/* ---------- History ---------- */
+.section-title {
+  margin: 0 0 12px;
+  font-size: 18px;
+  color: #1e3a5f;
+}
+
+.clickable-row {
+  cursor: pointer;
+}
+
+.clickable-row:hover {
+  background: #f5f9ff;
+}

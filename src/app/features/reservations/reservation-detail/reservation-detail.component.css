@@ -1,0 +1,209 @@
+.back-link {
+  margin: -8px 0 12px -8px;
+}
+
+/* ---------- Header ---------- */
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  margin: 0 0 6px;
+  font-size: 26px;
+  color: #1e3a5f;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ---------- Progress steps ---------- */
+.flow {
+  display: flex;
+  gap: 8px;
+  margin: 0 0 20px;
+  padding: 0;
+  list-style: none;
+}
+
+.flow li {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #eef1f4;
+  color: #8a97a8;
+  font-weight: 500;
+}
+
+.flow li.done {
+  background: #e3ecf5;
+  color: #1e3a5f;
+}
+
+.flow li.current {
+  background: #1e3a5f;
+  color: #fff;
+}
+
+.dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.cancelled-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: #eceff1;
+  color: #607d8b;
+}
+
+/* ---------- Cards ---------- */
+.grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.card {
+  padding: 18px 22px;
+  background: #fff;
+  border: 1px solid #e3e7ec;
+  border-radius: 10px;
+}
+
+.card h2,
+.section-title {
+  margin: 0 0 12px;
+  font-size: 16px;
+  color: #1e3a5f;
+}
+
+.details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px 24px;
+  margin: 0;
+}
+
+.details .wide {
+  grid-column: 1 / -1;
+}
+
+.details dt {
+  font-size: 12px;
+  color: #6b7c93;
+  text-transform: uppercase;
+}
+
+.details dd {
+  margin: 2px 0 0;
+  font-weight: 500;
+}
+
+.details a {
+  color: #1e5fa8;
+}
+
+.money-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #eef1f4;
+}
+
+.money-row.balance {
+  border-bottom: none;
+  font-size: 18px;
+  color: #2e7d32;
+}
+
+.money-row.balance.due {
+  color: #b3261e;
+}
+
+.small {
+  font-size: 12px;
+}
+
+/* ---------- Invoice ---------- */
+.invoice {
+  margin-top: 24px;
+  padding: 24px;
+  background: #fff;
+  border: 1px solid #e3e7ec;
+  border-radius: 10px;
+  max-width: 560px;
+}
+
+.invoice-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.invoice-head h2 {
+  margin: 0;
+  color: #1e3a5f;
+}
+
+.invoice-lines {
+  margin: 0;
+}
+
+.invoice-lines div {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #eef1f4;
+}
+
+.invoice-lines dd {
+  margin: 0;
+}
+
+.invoice-total {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e3a5f;
+  border-bottom: none !important;
+}
+
+@media (max-width: 799px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .flow {
+    flex-direction: column;
+  }
+}
+
+@media print {
+  .invoice {
+    border: none;
+    max-width: none;
+  }
+}
